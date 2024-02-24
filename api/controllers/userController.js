@@ -1,59 +1,62 @@
 import asyncHandler from 'express-async-handler';
-import User from './userController';
+import User from '../models/userModel.js';
 import validator from 'email-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 
 // register
-// api/users/register
+// api/user/register
 // public
 
-export const regiterUser = asyncHandler( async (req, res) =>{
+export const registerUser = asyncHandler( async (req, res) =>{
     
     const { username, email, password } = req.body;
+    
     if(!username || !email || !password ) {
-        res.statusCode(400);
-        throw new error("All fields are mandatory");
+        res.status(400);
+        throw new Error("All fields are mandatory");
     }
+    
     if (!validator.validate(email)) {
-        res.statusCode(400);
-        throw new error("Invalid email.");
+        res.status(400);
+        throw new Error("Invalid email.");
     }
-    const userAvailable = User.findOne({email});
+
+    const userAvailable = await User.findOne({email});
+    
     if (userAvailable){
         res.status(400);
-        throw new error("user already exists");
+        throw new Error("user already exists");
+        
     }
-    
     const hashPassword = await bcrypt.hash(password, 10);
-    const user = User.create({username, email, password: hashPassword})
+    const user = await User.create({username, email, password: hashPassword})
     
     if(user){
-        res.status(200);
-        res.json({_id:user.id, email: user.email});
+        res.status(201).json({ _id: user.id, email: user.email });
     } else {
         res.status(400);
-        throw new error('Resource not created');
+        throw new Error('Resource not created');
     }
     
 });
 
 // login
-// api/users/login
+// api/user/login
 // public
 
 export const loginUser = asyncHandler(async (req, res) => {
     const {email, password} = req.body;
     if(!email || !password) {
         res.status(400);
-        throw new error('All fields are mandatory.');
+        throw new Error('All fields are mandatory.');
     }
     
-    const user = User.findOne({email});
+    const user = await User.findOne({email});
     
     if(!user) {
         res.status(404);
-        throw new error("User not found");
+        throw new Error("User not found");
     }
     
     if(user && (await bcrypt.compare(password, user.password))){
@@ -69,7 +72,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         res.status(200).json(accessToken);
     } else {
         res.status(403);
-        throw new error("Invalid credentials");
+        throw new Error("Invalid credentials");
         
     }
     
