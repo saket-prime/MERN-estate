@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 
 // register
-// api/user/register
+// api/auth/register
 // public
 
 export const registerUser = asyncHandler( async (req, res) =>{
@@ -23,17 +23,24 @@ export const registerUser = asyncHandler( async (req, res) =>{
     }
 
     const userAvailable = await User.findOne({email});
+    const userNameAvailable = await User.findOne({username});
+    
+    if (userNameAvailable){
+        res.status(400);
+        throw new Error("UserName already exists. Please select a different one.");
+        
+    }
     
     if (userAvailable){
         res.status(400);
-        throw new Error("user already exists");
+        throw new Error("User already exists.");
         
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = await User.create({username, email, password: hashPassword})
     
     if(user){
-        res.status(201).json({ _id: user.id, email: user.email });
+        res.status(201).json({message: "User Created"});
     } else {
         res.status(400);
         throw new Error('Resource not created');

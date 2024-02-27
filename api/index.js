@@ -2,14 +2,14 @@ import express from 'express';
 import 'dotenv/config';
 import dbConnect from './config/dbconnection.js';
 import errorHandler from './middlewares/errorHandler.js';
-import userRoutes from './routes/userRoute.js'
+import userRoutes from './routes/auth.route.js';
 
 dbConnect();
 const app = express();
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/api/user', userRoutes);
+app.use('/api/auth', userRoutes);
 app.use(errorHandler);
 
 
