@@ -70,13 +70,18 @@ export const loginUser = asyncHandler(async (req, res) => {
         
         const accessToken = jwt.sign({
             user: {
-                username: user.username,
                 email:user.email,
                 id:user.id
             }}, process.env.SECRET_KEY, {expiresIn: '1d'}
         )
         
-        res.status(200).json(accessToken);
+        const { password: pass, ...rest} = user._doc;
+        
+        res
+        .cookie('accessToken', accessToken, {httpOnly: true})
+        .status(200)
+        .json(rest);
+        
     } else {
         res.status(403);
         throw new Error("Invalid credentials");
