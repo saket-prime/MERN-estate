@@ -37,7 +37,7 @@ export default function SignUp() {
     } else {
       setLoading(false);
       setError(null);
-      navigate("/login")
+      navigate("/sign-in");
     }
     
   };
