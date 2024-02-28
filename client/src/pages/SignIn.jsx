@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInFailure, signInSuccess } from '../app/user/userSlice';
 
 export default function SignUp() {
 
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,7 +20,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
 
     e.preventDefault();
-    setLoading(true);
+    dispatch(signInStart());
 
     const res = await fetch("/api/auth/login",
       {
@@ -32,11 +34,9 @@ export default function SignUp() {
     const data = await res.json();
 
     if (data.statusCode >= 400) {
-      setLoading(false);
-      setError(data.message);
+      dispatch(signInFailure(data.message));
     } else {
-      setLoading(false);
-      setError(null);
+      dispatch(signInSuccess(data));
       navigate("/");
     }
 
@@ -61,7 +61,7 @@ export default function SignUp() {
           id='password'
           onChange={handleChange}></input>
 
-        <button disabled={setLoading} className='bg-sky-600 p-3 rounded-lg uppercase text-white
+        <button disabled={loading} className='bg-sky-600 p-3 rounded-lg uppercase text-white
         hover:opacity-90 disabled:opacity-70'>{loading ? "Loading..." : "Sign In"}</button>
 
       </form>
