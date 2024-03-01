@@ -95,7 +95,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 
 export const google = asyncHandler(async (req, res) => {
     
-    const {name, email, photoURL} = req.body;
+    const {name, email, photourl} = req.body;
     const user = await User.findOne({email});
     
     if(user) {
@@ -117,7 +117,7 @@ export const google = asyncHandler(async (req, res) => {
     } else {
         const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
         const hashPassword = await bcrypt.hash(generatedPassword, 10);
-        const newUser = await User.create({ username: name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4), email, password: hashPassword, avatar: photoURL});
+        const newUser = await User.create({ username: name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4), email, password: hashPassword, avatar: photourl});
         
         const accessToken = jwt.sign({
             user: {
