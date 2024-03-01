@@ -75,12 +75,12 @@ export const loginUser = asyncHandler(async (req, res) => {
             }}, process.env.SECRET_KEY, {expiresIn: '1d'}
         )
         
-        const { password: pass, ...rest} = user._doc;
+        const { password , ...rest} = user._doc;
         
         res
         .cookie('accessToken', accessToken, {httpOnly: true})
         .status(200)
-        .json(rest);
+        .json(user);
         
     } else {
         res.status(403);
@@ -88,4 +88,53 @@ export const loginUser = asyncHandler(async (req, res) => {
         
     }
     
+});
+
+//private
+//api/auth/google
+
+export const google = asyncHandler(async (req, res) => {
+    
+    const {name, email, photoURL} = req.body;
+    const user = await User.findOne({email});
+    
+    if(user) {
+        
+        const accessToken = jwt.sign({
+            user: {
+                email: user.email,
+                id: user.id
+            }
+        }, process.env.SECRET_KEY, { expiresIn: '1d' }
+        )
+
+        const { password , ...rest } = user._doc;
+
+        res
+        .cookie('accessToken', accessToken, { httpOnly: true })
+        .status(200)
+        .json(rest);
+    } else {
+        const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+        const hashPassword = await bcrypt.hash(generatedPassword, 10);
+        const newUser = await User.create({ username: name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4), email, password: hashPassword, avatar: photoURL});
+        
+        const accessToken = jwt.sign({
+            user: {
+                email: newUser.email,
+                id: newUser.id
+            }
+        }, process.env.SECRET_KEY, { expiresIn: '1d' }
+        )
+
+        const { password , ...rest } = newUser._doc;
+
+        res
+        .cookie('accessToken', accessToken, { httpOnly: true })
+        .status(200)
+        .json(rest);
+        
+    }
+    
 })
+
