@@ -80,7 +80,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         res
         .cookie('accessToken', accessToken, {httpOnly: true})
         .status(200)
-        .json(user);
+        .json(rest);
         
     } else {
         res.status(403);

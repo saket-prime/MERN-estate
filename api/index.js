@@ -2,14 +2,20 @@ import express from 'express';
 import 'dotenv/config';
 import dbConnect from './config/dbconnection.js';
 import errorHandler from './middlewares/errorHandler.js';
-import userRoutes from './routes/auth.route.js';
+import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js';
+import cookieParser from 'cookie-parser';
 
 dbConnect();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cookieParser());
 app.use(express.json());
-app.use('/api/auth', userRoutes);
+
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+
 app.use(errorHandler);
 
 
