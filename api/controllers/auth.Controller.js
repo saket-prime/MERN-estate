@@ -138,3 +138,18 @@ export const google = asyncHandler(async (req, res) => {
     
 })
 
+//private
+//api/auth/signout
+
+
+export const logoutUser = asyncHandler(async (req, res) => {
+    try {
+
+        res.status(200).clearCookie('accessToken').json('User logged out');
+
+    } catch (error) {
+        res.status(500);
+        throw new Error('server error');
+    }
+})
+
