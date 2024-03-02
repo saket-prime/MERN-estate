@@ -34,3 +34,21 @@ export const updateUser = asyncHandler(async (req, res) => {
     res.status(200).json(rest);
     
 })
+
+export const deleteUser = asyncHandler(async (req, res) => {
+    if (req.user.id !== req.params.id) {
+        res.status(401);
+        throw new Error("You can only delete your own account.");
+    }
+    
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        
+        res.status(200).clearCookie('accessToken').json({statusCode: "200", message: "user has been deleted"})
+    } catch (error) {
+        res.status(500);
+        throw new Error('user could not be deleted');
+    }
+    
+    
+})

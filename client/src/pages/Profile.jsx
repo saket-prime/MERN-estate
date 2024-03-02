@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { updateStart, updateSuccess, updateFailure } from "../app/user/userSlice";
+import { updateStart, updateSuccess, updateFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../app/user/userSlice";
 
 export default function Profile() {
   
@@ -80,6 +80,32 @@ export default function Profile() {
     }
   }
   
+  const handleDeleteUser = async (e) => {
+    
+    try {
+      dispatch(deleteUserStart());
+      const result = await fetch(`api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      
+      const data = await result.json();
+      console.log(data);
+      
+      
+      if (data.statusCode == 200) {
+        dispatch(deleteUserSuccess());
+      } else {
+        dispatch(deleteUserFailure(data.message));
+      }
+      
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  
+  
     
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -105,7 +131,7 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-4">
-        <span className="text-red-700 cursor-pointer font-medium">Delete account</span>
+        <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer font-medium">Delete account</span>
         <span className="text-red-700 cursor-pointer font-medium">Sign out</span>
       </div>
       {error && <p className='text-red-600 '>{error}</p>}
