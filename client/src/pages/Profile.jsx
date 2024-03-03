@@ -150,6 +150,24 @@ export default function Profile() {
     
   }
   
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`,{
+        method: 'DELETE',
+      });
+      
+      const data = res.json();
+      if(data.statusCode >= 400){
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev) => prev.filter((listing) => listing._id !== listingId));
+      
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  
     
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -184,26 +202,26 @@ export default function Profile() {
     <button onClick={handleShowListings} className="text-green-700 uppercase font-medium w-full">Show listings</button>
     {showListingsErr && <p className="text-red-700 mt-5 text-sm">Error showing listings</p>}
     
-    <div className="flex flex-col gap-4">
-      <p className="self-center text-2xl my-7 font-semibold">Your Listings</p>
-      {userListings && userListings.length > 0 &&
-      userListings.map((listing) => (
-        <div key={listing._id} className="flex p-3 border rounded-lg bg-sky-200 items-center justify-between gap-3">
-          <Link to={`/listings/${listing.id}`}>
-            <img className="w-16 h-16 object-contain" alt="listing-cover" src={listing.imageUrls[0]} />
-          </Link>
-          <Link className="text-slate-700 truncate hover:underline font-semibold flex-1" to={`/listings/${listing.id}`}>
-            <p>{listing.name}</p>
-          </Link>
-          <div className="flex flex-col">
-            <button className="text-red-600">Delete</button>
-            <button className="text-green-600">Edit</button>
+    {userListings && userListings.length > 0 &&
+      <div className="flex flex-col gap-4">
+        <p className="self-center text-2xl my-7 font-semibold">Your Listings</p>
+        {userListings.map((listing) => (
+          <div key={listing._id} className="flex p-3 border rounded-lg bg-sky-200 items-center justify-between gap-3">
+            <Link to={`/listings/${listing._id}`}>
+              <img className="w-16 h-16 object-contain" alt="listing-cover" src={listing.imageUrls[0]} />
+            </Link>
+            <Link to={`/listings/${listing._id}`} className="text-slate-700 truncate hover:underline font-semibold flex-1">
+              <p>{listing.name}</p>
+            </Link>
+            <div className="flex flex-col">
+              <button onClick={() => handleListingDelete(listing._id)} className="text-red-600">Delete</button>
+              <button className="text-green-600">Edit</button>
+            </div>
           </div>
-        </div>
-        
-      ))}
-    </div>
-    
+          
+        ))}
+      </div>
+    }
     </div>
   )
 }
