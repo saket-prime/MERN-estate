@@ -59,10 +59,6 @@ export const userListings = asyncHandler(async (req, res) => {
     if(req.user.id === req.params.id){
         const listing = await Listing.find({userRef: req.params.id});
         res.status(200).json(listing);
-        if(error) {
-            res.status(500);
-            res.json('server error');
-        }
     }else{
         res.status(401);
         res.json('User can only view your own listing.');
