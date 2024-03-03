@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcrypt';
-import User from '../models/userModel.js';
+import User from '../models/user.model.js';
 import validator from 'email-validator';
 
 export const updateUser = asyncHandler(async (req, res) => {

@@ -4,6 +4,7 @@ import dbConnect from './config/dbconnection.js';
 import errorHandler from './middlewares/errorHandler.js';
 import authRoutes from './routes/auth.route.js';
 import userRoutes from './routes/user.route.js';
+import listingRoutes from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 
 dbConnect();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/listing', listingRoutes);
 
 app.use(errorHandler);
 
