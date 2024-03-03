@@ -13,6 +13,7 @@ import {
   signoutUserFailure,
   signoutUserStart,
   signoutUserSuccess, } from "../app/user/userSlice";
+import {Link} from 'react-router-dom';
 
 export default function Profile() {
   
@@ -150,9 +151,10 @@ export default function Profile() {
         <input onChange={handleChange} type="text" id="email" defaultValue={currentUser.email} placeholder="email" className="border rounded-md p-3"/>
         
         <input onChange ={handleChange} type="password" id = "password" placeholder="password" className="border rounded-md p-3"/>
-        <button disabled ={loading} className="bg-sky-600 text-white uppercase p-3 rounded-md hover:opacity-80 disabled:opacity-50">
+        <button disabled ={loading} className="bg-sky-600 text-white uppercase p-3 rounded-md hover:bg-sky-700 disabled:opacity-50">
           {loading ? "Loading..." : "update"}
         </button>
+        <Link className = "bg-green-600 text-white p-3 text-center uppercase rounded-md hover:bg-green-700" to={'/create-listing'}>Create listing</Link>
       </form>
       <div className="flex justify-between mt-4">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer font-medium">Delete account</span>
