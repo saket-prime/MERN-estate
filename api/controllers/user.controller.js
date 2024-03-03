@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcrypt';
 import User from '../models/user.model.js';
 import validator from 'email-validator';
+import Listing from "../models/listing.model.js"
 
 export const updateUser = asyncHandler(async (req, res) => {
     
@@ -53,3 +54,18 @@ export const deleteUser = asyncHandler(async (req, res) => {
     
 })
 
+export const userListings = asyncHandler(async (req, res) => {
+    
+    if(req.user.id === req.params.id){
+        const listing = await Listing.find({userRef: req.params.id});
+        res.status(200).json(listing);
+        if(error) {
+            res.status(500);
+            res.json('server error');
+        }
+    }else{
+        res.status(401);
+        res.json('User can only view your own listing.');
+    }
+    
+})
