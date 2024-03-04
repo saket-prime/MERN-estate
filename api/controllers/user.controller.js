@@ -57,8 +57,8 @@ export const deleteUser = asyncHandler(async (req, res) => {
 export const userListings = asyncHandler(async (req, res) => {
     
     if(req.user.id === req.params.id){
-        const listing = await Listing.find({userRef: req.params.id});
-        res.status(200).json(listing);
+        const listings = await Listing.find({userRef: req.params.id});
+        res.status(200).json(listings);
     }else{
         res.status(401);
         res.json('User can only view your own listing.');
