@@ -57,3 +57,11 @@ export const updateListing = expressAsyncHandler(async (req, res) => {
     res.status(200).json(updatedListing);
     
 })
+
+export const getListing = expressAsyncHandler(async (req, res) => {
+
+    const listing = await Listing.findById(req.params.id);
+
+    res.status(200).json(listing);
+
+})
