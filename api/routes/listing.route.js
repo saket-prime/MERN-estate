@@ -10,4 +10,4 @@ router.post('/update/:id', verifyToken, updateListing);
 router.get('/:id', getListing);
 
 
-export default router;
+export default router; 

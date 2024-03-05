@@ -65,3 +65,15 @@ export const userListings = asyncHandler(async (req, res) => {
     }
     
 })
+
+export const getUser = asyncHandler(async (req, res) => {
+    
+    const user = await User.findById(req.params.id);
+    
+    if(user){
+        const {password, ...rest} = user._doc;
+        res.status(200);
+        res.json(rest);
+    }
+    
+})
