@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next ) => {
     
     if (err.name === 'CastError'){
         res.statusCode = 404;
-        err.message = 'Listing not found'
+        
     }
     
     
