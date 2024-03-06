@@ -65,6 +65,8 @@ export default function Search() {
             setListings(data);
             if(data.length > 8){
                 setShowMore(true);
+            } else{
+                setShowMore(false);
             }
             
         }
