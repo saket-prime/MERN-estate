@@ -107,7 +107,7 @@ export default function Home() {
                 <h2 className='text-2xl text-slate-600 font-semibold'> Recent offers </h2>
                 <Link className='text-sm text-blue-800 hover:underline' to={'/search?offer=true'}> Show more offers</Link>
               </div>
-              <div className='flex flex-wrap gap-4'>
+              <div className='flex flex-wrap sm:gap-4'>
                 {
                   offerListings.map((listing)=>(
                     <ListingItem key={listing._id} listing={listing} />
