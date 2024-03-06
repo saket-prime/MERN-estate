@@ -16,7 +16,7 @@ export default function Search() {
     });
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
-    console.log(listings);
+    const [showMore, setShowMore] = useState(false);
     
     useEffect(() => {
        
@@ -63,7 +63,9 @@ export default function Search() {
             }
             setLoading(false);
             setListings(data);
-            
+            if(data.length > 8){
+                setShowMore(true);
+            }
             
         }
         fetchListings();
@@ -123,9 +125,23 @@ export default function Search() {
         
     }
     
+    const onShowMoreClick = async () => {
+        
+        const urlParams = new URLSearchParams(location.search);
+        const startIndex = listings.length;
+        urlParams.set('startIndex', startIndex);
+        const searchQuery = urlParams.toString();
+        const res = await fetch(`/api/listing?${searchQuery}`)
+        const data = await res.json();
+        if(data.length < 9){
+            setShowMore(false);
+        }
+        setListings([...listings, ...data]);
+    }
+    
   return (
     <div className='flex flex-col md:flex-row'>
-        <div className='p-7 border-b-2 md:border-r-2 md: border-sky-200 md:min-h-screen'>
+        <div className='p-7 md:w-1/4 border-b-2 md:border-r-2 md: border-sky-200 md:min-h-screen'>
             <form onSubmit={handleSubmit} className='flex flex-col gap-7'>
                 <div className='flex items-center gap-2'>
                 
@@ -224,7 +240,7 @@ export default function Search() {
                 <button className='bg-sky-700 text text-white p-3 rounded-md uppercase hover:opacity-80'>Search</button>
             </form>
         </div>
-        <div className='p-3 flex-1'>
+        <div className='p-3 w-3/4'>
             <h1 
             className='text-3xl text-slate-700 font-semibold p-3 border-b border-sky-300 mt-5'>
             Listing results:
@@ -239,6 +255,13 @@ export default function Search() {
             { !loading && listings && listings.map((listing) => (
                 <ListingItem key={listing._id} listing ={listing}/>
             ))} 
+            {showMore && (
+                <button 
+                onClick={onShowMoreClick}
+                className='text-green-700 hover: underline w-full text-center p-7'
+                >
+                Show More</button>
+            )}
             </div>
         </div>
     </div>
