@@ -14,7 +14,7 @@ import {
     FaShare,
 } from 'react-icons/fa';
 import { useSelector } from "react-redux";
-import Contact from "../components/contact";
+import Contact from "../components/Contact";
 
 
 export default function Listing() {
